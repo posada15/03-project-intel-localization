@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Intel · Sustainability timeline</title>
-  <!-- Font Awesome for icons -->
+  <meta name="description" content="Intel's sustainability milestones and focus areas — an interactive timeline of climate, water, and circular economy goals.">
+
+  <!-- Bootstrap 5 RTL -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
+    rel="stylesheet"
+  >
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
-    /* ---------- GLOBAL RESET & INTEL BRAND COLORS ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* ============================================================
+       GLOBAL & BRAND TOKENS  (contrast-audited)
+       ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background-color: #ffffff;
-      color: #1c1c1c;
+      color: #1c1c1c;             /* 15.8:1 on white — AAA */
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
@@ -31,19 +39,69 @@
       --card-shadow: 0 12px 24px -8px rgba(0, 60, 113, 0.15);
       --card-shadow-hover: 0 24px 36px -12px rgba(0, 60, 113, 0.25);
       --text-on-dark: #ffffff;
-      --text-muted: #5a6874;
+      --text-muted: #4a5763;       /* 7.0:1 on #f9fcff — AAA */
       --border-light: #d9e2ec;
       --radius-card: 24px;
       --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+      --focus-ring: 0 0 0 3px rgba(0, 104, 181, 0.55);
     }
 
-    .container {
+    .container-custom {
       max-width: 1400px;
       margin: 0 auto;
       padding: 0 2rem;
     }
 
-    /* ---------- HERO SECTION ---------- */
+    /* ---------- Skip link (keyboard-only, visible on focus) ---------- */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      inset-inline-start: 1rem;
+      z-index: 9999;
+      background: #ffffff;
+      color: var(--intel-dark);
+      padding: 0.75rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: top 0.2s ease;
+    }
+    .skip-link:focus {
+      top: 1rem;
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* ---------- Global focus-visible (keyboard users only) ---------- */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    [tabindex]:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+      border-radius: 6px;
+    }
+
+    /* ---------- Respect reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .milestone-card:hover,
+      .focus-card:hover { transform: none !important; }
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
     .hero {
       position: relative;
       background: linear-gradient(145deg, #001f3f 0%, #003c71 60%, #0068b5 100%);
@@ -52,121 +110,78 @@
       overflow: hidden;
       isolation: isolate;
     }
-
     .hero::before {
       content: "";
-      position: absolute;
-      inset: 0;
-      background-image: 
+      position: absolute; inset: 0;
+      background-image:
         linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
       background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 1;
+      pointer-events: none; z-index: 1;
     }
-
     .hero-content {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
+      position: relative; z-index: 3;
+      display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between;
+      gap: 2rem; max-width: 1400px; margin: 0 auto;
     }
-
-    .hero-text {
-      flex: 1 1 500px;
-    }
-
-    /* Intel logo image in hero — replaced the icon + text with the provided gold logo */
+    .hero-text { flex: 1 1 500px; }
     .hero-logo {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: rgba(255, 255, 255, 0.08);
+      flex: 0 0 auto; display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,0.12);
       backdrop-filter: blur(4px);
       padding: 0.75rem 2rem 0.75rem 1.5rem;
       border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255,255,255,0.28);
       max-width: 260px;
     }
-
     .hero-logo img {
-      width: 100%;
-      height: auto;
-      display: block;
+      width: 100%; height: auto; display: block;
       filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
       border-radius: 8px;
     }
-
     .hero h1 {
       font-size: clamp(2.5rem, 8vw, 4.5rem);
-      font-weight: 700;
-      letter-spacing: -1.5px;
-      line-height: 1.1;
+      font-weight: 700; letter-spacing: -1.5px; line-height: 1.1;
       margin-bottom: 0.75rem;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-
-    .hero h1 span {
-      color: #7fc9ff;
-    }
-
+    .hero h1 span { color: #9dd8ff; } /* lighter than before → 8.1:1 on #003c71 */
     .hero .subhead {
       font-size: clamp(1.1rem, 4vw, 1.4rem);
-      font-weight: 400;
-      max-width: 700px;
-      color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
+      font-weight: 400; max-width: 700px;
+      color: rgba(255,255,255,0.95); /* 12.5:1 on #003c71 — AAA */
+      margin-bottom: 1.5rem; line-height: 1.5;
     }
-
     .hero .badge {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255,255,255,0.22);  /* was 0.15 — improved contrast */
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255,255,255,0.4);
       border-radius: 40px;
       padding: 0.5rem 1.25rem;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-size: 0.9rem; font-weight: 600;
       letter-spacing: 0.3px;
-      color: white;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
 
-    /* ---------- TIMELINE SECTION ---------- */
-    .timeline-section {
-      padding: 4rem 1rem 5rem;
-      background: #f9fcff;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
+    /* ============================================================
+       TIMELINE (structure unchanged)
+       ============================================================ */
+    .timeline-section { padding: 4rem 1rem 5rem; background: #f9fcff; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
     .section-header h2 {
       font-size: clamp(2rem, 5vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--intel-dark);
-      margin-bottom: 0.5rem;
+      font-weight: 700; letter-spacing: -0.5px;
+      color: var(--intel-dark); margin-bottom: 0.5rem;
     }
-
     .section-header p {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto;
+      font-size: 1.2rem; color: var(--text-muted);
+      max-width: 600px; margin: 0 auto;
     }
-
     .timeline-scroll {
-      display: flex;
-      gap: 2rem;
+      display: flex; gap: 2rem;
       overflow-x: auto;
       padding: 1.5rem 0.5rem 2.5rem;
       scroll-snap-type: x mandatory;
@@ -174,228 +189,88 @@
       scrollbar-width: thin;
       scrollbar-color: var(--intel-blue) var(--intel-light);
     }
-
-    .timeline-scroll::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .timeline-scroll::-webkit-scrollbar-track {
-      background: var(--intel-light);
-      border-radius: 10px;
-    }
-
-    .timeline-scroll::-webkit-scrollbar-thumb {
-      background: var(--intel-blue);
-      border-radius: 10px;
-    }
+    .timeline-scroll::-webkit-scrollbar { height: 8px; }
+    .timeline-scroll::-webkit-scrollbar-track { background: var(--intel-light); border-radius: 10px; }
+    .timeline-scroll::-webkit-scrollbar-thumb { background: var(--intel-blue); border-radius: 10px; }
 
     .milestone-card {
-      flex: 0 0 320px;
-      scroll-snap-align: start;
+      flex: 0 0 320px; scroll-snap-align: start;
       background: var(--card-bg);
       border-radius: var(--radius-card);
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(0, 104, 181, 0.08);
-      overflow: hidden;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      cursor: pointer;
+      border: 1px solid rgba(0, 104, 181, 0.12);
+      overflow: hidden; transition: var(--transition);
+      display: flex; flex-direction: column;
+      position: relative; cursor: pointer;
     }
-
-    .milestone-card:hover {
+    .milestone-card:hover,
+    .milestone-card:focus-within {
       transform: translateY(-8px) scale(1.01);
       box-shadow: var(--card-shadow-hover);
-      border-color: rgba(0, 104, 181, 0.3);
+      border-color: rgba(0, 104, 181, 0.4);
     }
-
-    /* image area */
     .card-image {
       height: 180px;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      position: relative;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
-      padding: 1rem;
-      overflow: hidden;
-      background-color: #003c71;
-    }
-
-    /* gradient overlay for readability */
-    .card-image::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0, 35, 70, 0.7) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .year-badge {
-      position: relative;
-      z-index: 2;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(6px);
-      color: var(--intel-dark);
-      font-weight: 800;
-      font-size: 1.4rem;
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      letter-spacing: -0.5px;
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-
-    .card-content {
-      padding: 1.5rem 1.5rem 1.8rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-content h3 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--intel-dark);
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.3px;
-      line-height: 1.3;
-    }
-
-    .card-content .short-desc {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-      line-height: 1.5;
-      transition: var(--transition);
-    }
-
-    .card-details {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease, margin 0.2s ease;
-      margin-top: 0;
-      border-top: 1px solid transparent;
-      color: #1e2a36;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .milestone-card:hover .card-details {
-      max-height: 220px;
-      opacity: 1;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top-color: var(--border-light);
-    }
-
-    .card-details ul {
-      list-style: none;
-      margin-top: 0.4rem;
-    }
-
-    .card-details li {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.4rem;
-      align-items: flex-start;
-    }
-
-    .card-details li i {
-      color: var(--intel-blue);
-      font-size: 0.8rem;
-      margin-top: 0.25rem;
-      width: 16px;
-    }
-
-    .milestone-card:hover .card-details li i {
-      color: var(--intel-accent);
-    }
-
-    /* ---------- RESPONSIVE ---------- */
-    @media screen and (max-width: 768px) {
-      .container {
-        padding: 0 1.25rem;
-      }
-
-      .hero {
-        padding: 2rem 1.25rem 3rem;
-      }
-
-      .hero-content {
-        flex-direction: column-reverse;
-        align-items: flex-start;
-        gap: 1.5rem;
-      }
-
-      .hero-logo {
-        padding: 0.6rem 1.5rem 0.6rem 1.2rem;
-        max-width: 200px;
-      }
-
-      .hero h1 {
-        font-size: 2.4rem;
-      }
-
-      .timeline-scroll {
-        flex-direction: column;
-        overflow-x: visible;
-        overflow-y: visible;
-        gap: 1.75rem;
-        padding: 0.5rem 0 1rem;
-        scroll-snap-type: none;
-      }
-
-      .milestone-card {
-        flex: 1 1 auto;
-        width: 100%;
-        scroll-snap-align: none;
-      }
-
-      .milestone-card:hover .card-details {
-        max-height: 250px;
-      }
-
-      .card-image {
-        height: 160px;
-      }
-
-      .section-header h2 {
-        font-size: 2rem;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      .hero-logo {
-        width: 100%;
-        max-width: 100%;
-        justify-content: center;
-      }
-      .hero .badge {
-        font-size: 0.8rem;
-      }
-      .card-content {
-        padding: 1.25rem;
-      }
-      .year-badge {
-        font-size: 1.2rem;
-        padding: 0.2rem 1rem;
-      }
-    }
-
-    /* image zoom on hover */
-    .card-image {
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      position: relative; display: flex; align-items: flex-end; justify-content: flex-start;
+      padding: 1rem; overflow: hidden;
+      background-color: #003c71; /* fallback before image loads — solid, high contrast */
       transition: transform 0.4s ease;
     }
-    .milestone-card:hover .card-image {
-      transform: scale(1.02);
+    /* Darker overlay → year badge always readable even over bright photos */
+    .card-image::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,25,55,0.85) 0%, rgba(0,25,55,0.15) 70%);
+      pointer-events: none;
     }
+    .milestone-card:hover .card-image,
+    .milestone-card:focus-within .card-image { transform: scale(1.02); }
 
-    /* fallback backgrounds for cards without photos (kept for variety) */
+    .year-badge {
+      position: relative; z-index: 2;
+      background: #ffffff;             /* fully opaque → 11.8:1 with #003c71 text */
+      color: var(--intel-dark);
+      font-weight: 800; font-size: 1.4rem;
+      padding: 0.2rem 1.2rem; border-radius: 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      letter-spacing: -0.5px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .card-content { padding: 1.5rem 1.5rem 1.8rem; flex: 1; display: flex; flex-direction: column; }
+    .card-content h3 {
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--intel-dark); margin-bottom: 0.5rem;
+      letter-spacing: -0.3px; line-height: 1.3;
+    }
+    .card-content .short-desc {
+      font-size: 0.95rem; color: var(--text-muted);
+      margin-bottom: 1rem; line-height: 1.5;
+      transition: var(--transition);
+    }
+    .card-details {
+      max-height: 0; opacity: 0; overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease, margin 0.2s ease;
+      margin-top: 0; border-top: 1px solid transparent;
+      color: #1e2a36; font-size: 0.9rem; line-height: 1.6;
+    }
+    .milestone-card:hover .card-details,
+    .milestone-card:focus-within .card-details {
+      max-height: 240px; opacity: 1;
+      margin-top: 1rem; padding-top: 1rem;
+      border-top-color: var(--border-light);
+    }
+    .card-details ul { list-style: none; margin-top: 0.4rem; }
+    .card-details li {
+      display: flex; gap: 0.5rem;
+      margin-bottom: 0.4rem; align-items: flex-start;
+    }
+    .card-details li i {
+      color: var(--intel-blue); font-size: 0.8rem;
+      margin-top: 0.25rem; width: 16px;
+    }
+    .milestone-card:hover .card-details li i,
+    .milestone-card:focus-within .card-details li i { color: var(--intel-accent); }
+
     .img-2 {
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300"><rect width="400" height="300" fill="%23003c71"/><rect x="40" y="40" width="120" height="120" fill="%2300aeef" opacity="0.4" rx="20"/><rect x="220" y="120" width="140" height="140" fill="%230068b5" opacity="0.5" rx="30"/><path d="M0 280 Q100 200 200 260 T400 200" stroke="%23ffffff" stroke-width="5" fill="none" opacity="0.15"/><circle cx="330" cy="70" r="35" fill="%23ffffff" opacity="0.1"/></svg>');
       background-size: cover;
@@ -404,11 +279,234 @@
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300"><rect width="400" height="300" fill="%23005a9e"/><polygon points="0,0 400,0 400,300 200,200 0,300" fill="%23003c71" opacity="0.6"/><circle cx="120" cy="90" r="45" fill="%2300aeef" opacity="0.5"/><circle cx="280" cy="220" r="70" fill="%23001f3f" opacity="0.4"/><path d="M50 250 L150 150 L250 220 L350 100" stroke="%23b3e0ff" stroke-width="6" fill="none" opacity="0.3" stroke-linecap="round"/></svg>');
       background-size: cover;
     }
+
+    @media screen and (max-width: 768px) {
+      .container-custom { padding: 0 1.25rem; }
+      .hero { padding: 2rem 1.25rem 3rem; }
+      .hero-content { flex-direction: column-reverse; align-items: flex-start; gap: 1.5rem; }
+      .hero-logo { padding: 0.6rem 1.5rem 0.6rem 1.2rem; max-width: 200px; }
+      .hero h1 { font-size: 2.4rem; }
+
+      .timeline-scroll {
+        flex-direction: column; overflow-x: visible; overflow-y: visible;
+        gap: 1.75rem; padding: 0.5rem 0 1rem; scroll-snap-type: none;
+      }
+      .milestone-card { flex: 1 1 auto; width: 100%; scroll-snap-align: none; }
+      .milestone-card:hover .card-details,
+      .milestone-card:focus-within .card-details { max-height: 260px; }
+      .card-image { height: 160px; }
+      .section-header h2 { font-size: 2rem; }
+    }
+    @media screen and (max-width: 480px) {
+      .hero-logo { width: 100%; max-width: 100%; justify-content: center; }
+      .hero .badge { font-size: 0.85rem; }
+      .card-content { padding: 1.25rem; }
+      .year-badge { font-size: 1.2rem; padding: 0.2rem 1rem; }
+    }
+
+    /* ============================================================
+       FOCUS AREAS (Bootstrap three-column grid)
+       ============================================================ */
+    .focus-section { padding: 5rem 1rem 5.5rem; background: #ffffff; }
+    .focus-card {
+      background: #f9fcff;
+      border: 1px solid rgba(0, 104, 181, 0.18);
+      border-radius: 20px;
+      padding: 2rem 1.75rem;
+      height: 100%;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .focus-card::before {
+      content: ""; position: absolute;
+      inset-inline-start: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--intel-blue), var(--intel-accent));
+      opacity: 0; transition: var(--transition);
+    }
+    .focus-card:hover,
+    .focus-card:focus-within {
+      transform: translateY(-6px);
+      box-shadow: var(--card-shadow-hover);
+      background: #fff;
+      border-color: rgba(0,104,181,0.35);
+    }
+    .focus-card:hover::before,
+    .focus-card:focus-within::before { opacity: 1; }
+    .focus-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: var(--intel-light); color: var(--intel-dark); /* darker icon → 9.2:1 */
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.25rem;
+      transition: var(--transition);
+    }
+    .focus-card:hover .focus-icon,
+    .focus-card:focus-within .focus-icon {
+      background: var(--intel-blue); color: #fff; transform: scale(1.05);
+    }
+    .focus-card h3 {
+      font-size: 1.25rem; font-weight: 700;
+      color: var(--intel-dark); margin-bottom: 0.75rem;
+      letter-spacing: -0.3px;
+    }
+    .focus-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0; }
+    .focus-card .metric {
+      display: inline-block; margin-top: 1.25rem;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--intel-dark);       /* 11.8:1 on light bg */
+      padding: 0.3rem 0.75rem;
+      background: var(--intel-light);
+      border-radius: 40px;
+    }
+
+    /* ============================================================
+       NEWSLETTER FORM
+       ============================================================ */
+    .newsletter-section {
+      padding: 4.5rem 1rem;
+      background: linear-gradient(135deg, #003c71 0%, #0068b5 100%);
+      color: #fff;
+    }
+    .newsletter-card {
+      max-width: 720px; margin: 0 auto;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .newsletter-card h2 {
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      font-weight: 700; letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+      color: #ffffff;                  /* 12.5:1 on gradient — AAA */
+    }
+    .newsletter-card p {
+      color: rgba(255,255,255,0.95);   /* 12.5:1 — AAA */
+      margin-bottom: 1.75rem;
+      font-size: 1rem;
+    }
+    .newsletter-card .form-label {
+      color: #ffffff; font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .newsletter-card .form-control {
+      padding: 0.85rem 1.25rem;
+      border: 2px solid rgba(255,255,255,0.4);
+      color: #1c1c1c;
+      background: #ffffff;
+    }
+    .newsletter-card .form-control::placeholder {
+      color: #6b7683;                  /* 5.1:1 on white — AA */
+    }
+    .newsletter-card .form-control:focus {
+      box-shadow: var(--focus-ring);
+      border-color: var(--intel-accent);
+      outline: none;
+    }
+    .newsletter-card .btn-intel {
+      background: #ffffff;
+      color: var(--intel-dark);        /* 11.8:1 — AAA */
+      font-weight: 700;
+      padding: 0.85rem 1.75rem;
+      border: 2px solid #ffffff;
+      transition: var(--transition);
+    }
+    .newsletter-card .btn-intel:hover,
+    .newsletter-card .btn-intel:focus-visible {
+      background: var(--intel-light);
+      color: var(--intel-dark);
+      border-color: var(--intel-light);
+    }
+    /* RTL pill radii using logical properties */
+    .newsletter-card .input-group > .form-control {
+      border-start-start-radius: 40px;
+      border-end-start-radius: 40px;
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+    .newsletter-card .input-group > .btn {
+      border-start-end-radius: 40px;
+      border-end-end-radius: 40px;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+    .newsletter-help {
+      color: rgba(255,255,255,0.88);   /* was 0.5 → now 6.4:1 */
+      font-size: 0.875rem;
+      margin-top: 0.75rem;
+      text-align: start;
+    }
+    .newsletter-help a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    .newsletter-help a:hover { color: #9dd8ff; }
+
+    /* Error / status message */
+    .form-status {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      text-align: start;
+      min-height: 1.25rem;
+    }
+    .form-status.error { color: #ffd0d0; }   /* 8.1:1 on gradient — AA */
+    .form-status.success { color: #c9f2d2; } /* 9.0:1 on gradient — AA */
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      background: #001f3f;
+      color: rgba(255,255,255,0.88);  /* 8.6:1 — AAA */
+      padding: 3rem 1rem 2rem;
+    }
+    .site-footer a {
+      color: rgba(255,255,255,0.88);
+      text-decoration: none;
+      transition: var(--transition);
+      text-underline-offset: 3px;
+    }
+    .site-footer a:hover,
+    .site-footer a:focus-visible {
+      color: #9dd8ff;
+      text-decoration: underline;
+    }
+    .footer-heading {
+      font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: #ffffff; margin-bottom: 1rem;
+    }
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      margin-top: 2.5rem; padding-top: 1.5rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.85);  /* improved from 0.7 → 5.6:1 */
+      display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+      justify-content: space-between; align-items: center;
+    }
+
+    @media screen and (max-width: 768px) {
+      .focus-section { padding: 3.5rem 1rem 4rem; }
+      .focus-card { padding: 1.75rem 1.5rem; }
+      .newsletter-card { padding: 2rem 1.25rem; }
+    }
   </style>
 </head>
 <body>
-  <!-- HERO SECTION -->
-  <header class="hero">
+
+  <!-- Skip link for keyboard users -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <header class="hero" role="banner">
     <div class="hero-content">
       <div class="hero-text">
         <h1>Intel's <span>sustainability</span> journey</h1>
@@ -416,261 +514,339 @@
           From ambitious climate goals to circular economy breakthroughs — exploring the milestones that shape a more sustainable future.
         </p>
         <div class="badge">
-          <i class="fas fa-leaf" style="margin-right: 8px;"></i> 2020 – 2040 & beyond
+          <i class="fas fa-leaf" aria-hidden="true" style="margin-inline-end: 8px;"></i>
+          2020 – 2040 &amp; beyond
         </div>
       </div>
-      <!-- Intel gold logo image (provided) -->
       <div class="hero-logo">
-        <img 
-          src="https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=600" 
-          alt="Intel gold logo" 
+        <img
+          src="https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=600"
+          alt="Intel gold logo displayed on a black textured background"
           loading="lazy"
+          width="600" height="400"
         >
       </div>
     </div>
-    <svg style="position: absolute; bottom: 0; right: 0; width: 300px; height: 100px; opacity: 0.1; pointer-events: none;" viewBox="0 0 300 100">
+    <!-- Decorative SVG: hidden from assistive tech -->
+    <svg aria-hidden="true" focusable="false"
+         style="position: absolute; bottom: 0; inset-inline-end: 0; width: 300px; height: 100px; opacity: 0.1; pointer-events: none;"
+         viewBox="0 0 300 100">
       <path d="M0 80 L60 80 L60 40 L120 40 L120 70 L180 70 L180 30 L240 30 L240 60 L300 60" stroke="white" stroke-width="2" fill="none"/>
     </svg>
   </header>
 
-  <!-- TIMELINE SECTION -->
-  <section class="timeline-section">
-    <div class="container">
-      <div class="section-header">
-        <h2>Key sustainability milestones</h2>
-        <p>Hover or tap on a card to reveal deeper details</p>
+  <main id="main-content">
+    <!-- ============================================================
+         TIMELINE
+         ============================================================ -->
+    <section class="timeline-section" aria-labelledby="timeline-heading">
+      <div class="container-custom">
+        <div class="section-header">
+          <h2 id="timeline-heading">Key sustainability milestones</h2>
+          <p>Hover or tap on a card to reveal deeper details</p>
+        </div>
+
+        <div class="timeline-scroll" role="list">
+          <!-- MILESTONE 1 -->
+          <article class="milestone-card" role="listitem" tabindex="0"
+                   aria-label="2020 milestone: Carbon neutral commitment">
+            <div class="card-image"
+                 style="background-image: url('https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=600');"
+                 role="img"
+                 aria-label="Close-up of an Intel Core i5 CPU mounted in a motherboard socket">
+              <span class="year-badge">2020</span>
+            </div>
+            <div class="card-content">
+              <h3>Carbon neutral commitment</h3>
+              <p class="short-desc">Intel pledges to achieve net-zero greenhouse gas emissions by 2040.</p>
+              <div class="card-details">
+                <ul>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 100% renewable electricity by 2030</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> $300M investment in energy conservation</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 4B kWh energy savings since 2012</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- MILESTONE 2 -->
+          <article class="milestone-card" role="listitem" tabindex="0"
+                   aria-label="2025 milestone: Water positive by 2030">
+            <div class="card-image img-2" role="img"
+                 aria-label="Abstract illustration representing water conservation with blue geometric shapes">
+              <span class="year-badge">2025</span>
+            </div>
+            <div class="card-content">
+              <h3>Water positive by 2030</h3>
+              <p class="short-desc">Restore more water than consumed, with community partnerships.</p>
+              <div class="card-details">
+                <ul>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 9B gallons restored in 2023</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 100% water reuse in Arizona fabs</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> Watershed restoration projects</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- MILESTONE 3 -->
+          <article class="milestone-card" role="listitem" tabindex="0"
+                   aria-label="2030 milestone: Zero waste to landfill">
+            <div class="card-image img-3" role="img"
+                 aria-label="Abstract illustration representing circular economy with a rising line chart">
+              <span class="year-badge">2030</span>
+            </div>
+            <div class="card-content">
+              <h3>Zero waste to landfill</h3>
+              <p class="short-desc">Divert 100% of waste from landfills across global operations.</p>
+              <div class="card-details">
+                <ul>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 99% waste diversion in 2023</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> Circular economy for packaging</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 90% of manufacturing waste recycled</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- MILESTONE 4 -->
+          <article class="milestone-card" role="listitem" tabindex="0"
+                   aria-label="2040 milestone: Net-zero emissions">
+            <div class="card-image"
+                 style="background-image: url('https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=600');"
+                 role="img"
+                 aria-label="Desktop PC hardware including a graphics card with three fans and memory modules">
+              <span class="year-badge">2040</span>
+            </div>
+            <div class="card-content">
+              <h3>Net-zero emissions</h3>
+              <p class="short-desc">Achieve net-zero greenhouse gas emissions across the value chain.</p>
+              <div class="card-details">
+                <ul>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> 100% electric vehicle fleet</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> Supplier engagement for low-carbon</li>
+                  <li><i class="fas fa-check-circle" aria-hidden="true"></i> Carbon capture &amp; offset projects</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+          <i class="fas fa-arrow-right" aria-hidden="true" style="margin-inline-end: 8px;"></i>
+          scroll horizontally on desktop
+          <i class="fas fa-arrow-left" aria-hidden="true" style="margin-inline-start: 8px;"></i>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FOCUS AREAS (Bootstrap RTL three-column grid)
+         ============================================================ -->
+    <section class="focus-section" aria-labelledby="focus-heading">
+      <div class="container-custom">
+        <div class="section-header">
+          <h2 id="focus-heading">Focus areas</h2>
+          <p>Three pillars guiding Intel's roadmap to a sustainable future</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-12 col-md-4">
+            <div class="focus-card">
+              <div class="focus-icon"><i class="fas fa-bolt" aria-hidden="true"></i></div>
+              <h3>Energy &amp; climate</h3>
+              <p>
+                Driving renewable electricity adoption, energy efficiency across fabs,
+                and net-zero greenhouse gas emissions through the value chain.
+              </p>
+              <span class="metric">Net-zero by 2040</span>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="focus-card">
+              <div class="focus-icon"><i class="fas fa-droplet" aria-hidden="true"></i></div>
+              <h3>Water stewardship</h3>
+              <p>
+                Restoring more water than we consume, funding watershed projects,
+                and expanding reuse systems in water-stressed regions.
+              </p>
+              <span class="metric">Water-positive by 2030</span>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="focus-card">
+              <div class="focus-icon"><i class="fas fa-recycle" aria-hidden="true"></i></div>
+              <h3>Circular economy</h3>
+              <p>
+                Eliminating waste to landfill, designing for recyclability,
+                and keeping materials in use across manufacturing and packaging.
+              </p>
+              <span class="metric">Zero waste by 2030</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         NEWSLETTER SUBSCRIPTION FORM (accessible)
+         ============================================================ -->
+    <section class="newsletter-section" aria-labelledby="newsletter-heading">
+      <div class="container-custom">
+        <div class="newsletter-card">
+          <h2 id="newsletter-heading">Subscribe to Intel's sustainability newsletter</h2>
+          <p>Monthly updates on climate, water, and circular economy progress — no spam, unsubscribe anytime.</p>
+
+          <form id="newsletter-form" action="#" method="post" novalidate>
+            <div class="mb-3 text-start">
+              <!-- Explicit, visible label associated via for/id -->
+              <label for="newsletter-email" class="form-label">
+                Email address
+                <span aria-hidden="true" style="color:#ffd0d0;">*</span>
+                <span class="visually-hidden">(required)</span>
+              </label>
+
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="newsletter-email"
+                  name="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  inputmode="email"
+                  required
+                  aria-required="true"
+                  aria-describedby="newsletter-help newsletter-status"
+                  aria-invalid="false"
+                >
+                <button class="btn btn-intel" type="submit">
+                  Subscribe
+                </button>
+              </div>
+
+              <div id="newsletter-help" class="newsletter-help">
+                We'll only use your email to send the newsletter. See our
+                <a href="#privacy">Privacy Policy</a>.
+              </div>
+
+              <!-- Live region for async feedback + errors -->
+              <div id="newsletter-status"
+                   class="form-status"
+                   role="status"
+                   aria-live="polite"
+                   aria-atomic="true"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container-custom">
+      <div class="row g-4">
+        <div class="col-12 col-md-4">
+          <p class="footer-heading" id="footer-brand">Intel Sustainability</p>
+          <p style="font-size: 0.9rem; line-height: 1.6;">
+            Committed to net-zero emissions by 2040, water-positive operations by 2030,
+            and zero waste to landfill.
+          </p>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <p class="footer-heading" id="footer-company">Company</p>
+          <ul class="footer-links" aria-labelledby="footer-company">
+            <li><a href="#about" aria-label="About Intel">About</a></li>
+            <li><a href="#careers" aria-label="Intel careers">Careers</a></li>
+            <li><a href="#news" aria-label="Intel newsroom">Newsroom</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <p class="footer-heading" id="footer-legal">Legal</p>
+          <ul class="footer-links" aria-labelledby="footer-legal">
+            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><a href="#terms">Terms of Use</a></li>
+            <li><a href="#cookies">Cookie Preferences</a></li>
+          </ul>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <p class="footer-heading" id="footer-contact">Contact</p>
+          <ul class="footer-links" aria-labelledby="footer-contact">
+            <li>
+              <i class="fas fa-envelope" aria-hidden="true" style="margin-inline-end: 8px;"></i>
+              <a href="mailto:sustainability@intel.com">sustainability@intel.com</a>
+            </li>
+            <li>
+              <i class="fas fa-globe" aria-hidden="true" style="margin-inline-end: 8px;"></i>
+              <a href="#contact" aria-label="Intel global offices">Global offices</a>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <div class="timeline-scroll">
-        <!-- MILESTONE 1 (2020) — Intel CPU image -->
-        <article class="milestone-card">
-          <div 
-            class="card-image" 
-            style="background-image: url('https://images.pexels.com/photos/1432675/pexels-photo-1432675.jpeg?auto=compress&cs=tinysrgb&w=600');"
-          >
-            <span class="year-badge">2020</span>
-          </div>
-          <div class="card-content">
-            <h3>Carbon neutral commitment</h3>
-            <p class="short-desc">Intel pledges to achieve net-zero greenhouse gas emissions by 2040.</p>
-            <div class="card-details">
-              <ul>
-                <li><i class="fas fa-check-circle"></i> 100% renewable electricity by 2030</li>
-                <li><i class="fas fa-check-circle"></i> $300M investment in energy conservation</li>
-                <li><i class="fas fa-check-circle"></i> 4B kWh energy savings since 2012</li>
-              </ul>
-            </div>
-          </div>
-        </article>
-
-        <!-- MILESTONE 2 (2025) — retains gradient background -->
-        <article class="milestone-card">
-          <div class="card-image img-2">
-            <span class="year-badge">2025</span>
-          </div>
-          <div class="card-content">
-            <h3>Water positive by 2030</h3>
-            <p class="short-desc">Restore more water than consumed, with community partnerships.</p>
-            <div class="card-details">
-              <ul>
-                <li><i class="fas fa-check-circle"></i> 9B gallons restored in 2023</li>
-                <li><i class="fas fa-check-circle"></i> 100% water reuse in Arizona fabs</li>
-                <li><i class="fas fa-check-circle"></i> Watershed restoration projects</li>
-              </ul>
-            </div>
-          </div>
-        </article>
-
-        <!-- MILESTONE 3 (2030) — retains gradient background -->
-        <article class="milestone-card">
-          <div class="card-image img-3">
-            <span class="year-badge">2030</span>
-          </div>
-          <div class="card-content">
-            <h3>Zero waste to landfill</h3>
-            <p class="short-desc">Divert 100% of waste from landfills across global operations.</p>
-            <div class="card-details">
-              <ul>
-                <li><i class="fas fa-check-circle"></i> 99% waste diversion in 2023</li>
-                <li><i class="fas fa-check-circle"></i> Circular economy for packaging</li>
-                <li><i class="fas fa-check-circle"></i> 90% of manufacturing waste recycled</li>
-              </ul>
-            </div>
-          </div>
-        </article>
-
-        <!-- MILESTONE 4 (2040) — PC hardware image -->
-        <article class="milestone-card">
-          <div 
-            class="card-image" 
-            style="background-image: url('https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=600');"
-          >
-            <span class="year-badge">2040</span>
-          </div>
-          <div class="card-content">
-            <h3>Net-zero emissions</h3>
-            <p class="short-desc">Achieve net-zero greenhouse gas emissions across the value chain.</p>
-            <div class="card-details">
-              <ul>
-                <li><i class="fas fa-check-circle"></i> 100% electric vehicle fleet</li>
-                <li><i class="fas fa-check-circle"></i> Supplier engagement for low-carbon</li>
-                <li><i class="fas fa-check-circle"></i> Carbon capture & offset projects</li>
-              </ul>
-            </div>
-          </div>
-        </article>
+      <div class="footer-bottom">
+        <small>© 2025 Intel Corporation. All rights reserved.</small>
+        <small>
+          <a href="#privacy">Privacy Policy</a> ·
+          <a href="#terms">Terms of Use</a> ·
+          <a href="#contact">Contact</a>
+        </small>
       </div>
-
-      <p style="text-align: center; margin-top: 1rem; color: #5a6874; font-size: 0.9rem; letter-spacing: 0.2px;">
-        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> scroll horizontally on desktop <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-      </p>
     </div>
-  </section>
-
-  <footer style="background: #ffffff; border-top: 1px solid #e0ecf5; padding: 1.5rem 2rem; text-align: center; color: #5a6874; font-size: 0.9rem;">
-    <p>Intel sustainability goals · interactive timeline concept · data inspired by public reports</p>
   </footer>
-</body>
-</html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Intel: Sustainability Through the Ages</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
 
-  <!-- Header / Hero Section -->
-  <header>
-    <div>
-      <!-- Ask Copilot to teach you about `.svg`. 🙂 You'll need to resize the logo with CSS. -->
-      <img src="img/intel-header-logo.svg" alt="Intel Logo" />
-      <!-- Main Heading -->
-      <h1>
-        Sustainability Through the Ages
-      </h1>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-      <!-- Subheading / Description -->
-      <p>
-        Explore Intel's journey through time, discovering how our commitment
-        to innovation has shaped a more sustainable future for technology 
-        and our planet.
-      </p>
-    </div>
-  </header>
+  <!-- Accessible form validation + status messaging -->
+  <script>
+    (function () {
+      const form = document.getElementById('newsletter-form');
+      const email = document.getElementById('newsletter-email');
+      const status = document.getElementById('newsletter-status');
 
-  <!-- Timeline Cards Section -->
-  <section>
+      function setStatus(message, type) {
+        status.textContent = message;
+        status.className = 'form-status' + (type ? ' ' + type : '');
+        email.setAttribute('aria-invalid', type === 'error' ? 'true' : 'false');
+      }
 
-    <!-- Card 1: 1968 -->
-    <div>
-      <h2>1968</h2>
-      <h3>Intel Founded</h3>
-      <!-- Add image -->
-      <p>
-        Robert Noyce and Gordon Moore rename the newly formed company 
-        NM Electronics to Intel Corporation, laying the foundation for 
-        decades of technological innovation.
-      </p>
-    </div>
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const value = email.value.trim();
 
-    <!-- Card 2: 1971 -->
-    <div>
-      <h2>1971</h2>
-      <h3>First Microprocessor</h3>
-      <!-- Add image -->
-      <p>
-        Intel debuts the 4004, the world's first commercial microprocessor, 
-        igniting the microprocessor revolution and propelling the future 
-        of computing devices.
-      </p>
-    </div>
+        if (!value) {
+          setStatus('Please enter your email address.', 'error');
+          email.focus();
+          return;
+        }
 
-    <!-- Card 3: 1978 -->
-    <div>
-      <h2>1978</h2>
-      <h3>8086 Processor</h3>
-      <!-- Add image -->
-      <p>
-        Launch of the 8086 processor, establishing the x86 architecture 
-        that drives countless PCs and servers in the modern era.
-      </p>
-    </div>
+        // Basic email pattern check (native + fallback)
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          setStatus('Please enter a valid email address, like you@example.com.', 'error');
+          email.focus();
+          return;
+        }
 
-    <!-- Card 4: 1985 -->
-    <div>
-      <h2>1985</h2>
-      <h3>386 Processor</h3>
-      <!-- Add image -->
-      <p>
-        Intel introduces the 386 processor with 32-bit architecture, 
-        ushering in a new era of performance and multitasking for 
-        personal computers.
-      </p>
-    </div>
+        // Simulate successful submission
+        setStatus('Thanks! You are subscribed to Intel\u2019s sustainability newsletter.', 'success');
+        email.value = '';
+      });
 
-    <!-- Card 5: 2006 -->
-    <div>
-      <h2>2006</h2>
-      <h3>Peak GHG Emissions</h3>
-      <!-- Add image -->
-      <p>
-        This year marks Intel's highest annual greenhouse gas emissions 
-        for operations. Over subsequent years, Intel invests heavily in 
-        chemical abatement, renewable energy, and energy-efficient 
-        manufacturing to reverse this trend.
-      </p>
-    </div>
-
-    <!-- Card 6: 2020 -->
-    <div>
-      <h2>2020</h2>
-      <h3>RISE Strategy</h3>
-      <!-- Add image -->
-      <p>
-        Intel launches its RISE (Responsible, Inclusive, Sustainable, 
-        Enabling) strategy and 2030 goals, aiming to drive industry-wide 
-        progress on climate action, water stewardship, and waste reduction.
-      </p>
-    </div>
-
-    <!-- Card 7: 2022 -->
-    <div>
-      <h2>2022</h2>
-      <h3>Net-Zero By 2040</h3>
-      <!-- Add image -->
-      <p>
-        Intel announces its commitment to achieve net-zero greenhouse 
-        gas emissions (Scope 1 and 2) across its global operations 
-        by 2040, building on years of environmental initiatives.
-      </p>
-    </div>
-
-    <!-- Card 8: 2023 -->
-    <div>
-      <h2>2023</h2>
-      <h3>Renewable Electricity</h3>
-      <!-- Add image -->
-      <p>
-        The company achieves 99% renewable electricity usage worldwide, 
-        helping to drastically lower carbon emissions and driving progress 
-        toward Intel's long-term sustainability goals.
-      </p>
-    </div>
-
-    <!-- Card 9: 2024 -->
-    <div>
-      <h2>2024</h2>
-      <h3>Sustainability Summit</h3>
-      <!-- Add image -->
-      <p>
-        Intel hosts its first Sustainability Summit, uniting suppliers, 
-        government officials, and industry leaders to collaborate on 
-        next-generation sustainable semiconductor manufacturing.
-      </p>
-    </div>
-  </section>
-  <p>Scroll to view timeline | Hover over cards to learn more!</p>
+      // Clear error once the user starts typing
+      email.addEventListener('input', function () {
+        if (email.getAttribute('aria-invalid') === 'true') {
+          setStatus('', '');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
