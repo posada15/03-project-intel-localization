@@ -1,1 +1,379 @@
 /* Add your CSS here */
+/* ============================================================
+   INTEL SUSTAINABILITY — NEW SECTION + FOOTER STYLES
+   Works alongside the existing timeline styles.
+   Drop this into your <style> block or a separate stylesheet.
+   ============================================================ */
+
+/* ---------- REUSE YOUR EXISTING DESIGN TOKENS ---------- */
+:root {
+  --intel-blue: #0068b5;
+  --intel-dark: #003c71;
+  --intel-light: #e6f0fa;
+  --intel-accent: #00aeef;
+  --card-bg: #ffffff;
+  --card-shadow: 0 12px 24px -8px rgba(0, 60, 113, 0.15);
+  --card-shadow-hover: 0 24px 36px -12px rgba(0, 60, 113, 0.25);
+  --text-muted: #5a6874;
+  --border-light: #d9e2ec;
+  --radius-card: 24px;
+  --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+
+  /* Added for the new section */
+  --form-focus: #00aeef;
+  --form-error: #c0392b;
+  --footer-bg: #001f3f;
+  --footer-text: #ffffff;
+  --footer-muted: #c9d6e2; /* improved contrast vs. white-50 */
+}
+
+/* ============================================================
+   1. GRID LAYOUT — responsive three-column section
+   ============================================================ */
+
+.subscription-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 2rem 2rem;
+  direction: rtl; /* RTL-compatible flow */
+}
+
+/* The grid container */
+.subscription-grid .grid-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+/* Mobile: single column (default above) */
+/* Tablet: two columns */
+@media screen and (min-width: 768px) {
+  .subscription-grid .grid-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: three equal columns */
+@media screen and (min-width: 992px) {
+  .subscription-grid .grid-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- CARD BASE (matches timeline cards) ---------- */
+.grid-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 104, 181, 0.08);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.grid-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: rgba(0, 104, 181, 0.25);
+  transform: translateY(-4px);
+}
+
+.grid-card h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--intel-dark);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.3px;
+}
+
+.grid-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* ---------- MISSION LIST ---------- */
+.mission-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mission-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  color: #1e2a36;
+  font-size: 0.95rem;
+}
+
+.mission-list li i {
+  color: var(--intel-blue);
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+/* ---------- QUICK LINKS ---------- */
+.quick-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quick-links li {
+  margin-bottom: 0.75rem;
+}
+
+.quick-links a {
+  color: var(--intel-blue);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--transition);
+  border-bottom: 1px solid transparent;
+}
+
+.quick-links a:hover,
+.quick-links a:focus-visible {
+  color: var(--intel-dark);
+  border-bottom-color: var(--intel-accent);
+}
+
+/* ============================================================
+   2. SUBSCRIPTION FORM — accessible + RTL-aware
+   ============================================================ */
+
+.newsletter-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.newsletter-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--intel-dark);
+  margin-bottom: 0.4rem;
+}
+
+.newsletter-form .form-control {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1c1c1c;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  transition: var(--transition);
+  /* RTL: text starts on the right */
+  text-align: right;
+}
+
+.newsletter-form .form-control:focus {
+  outline: none;
+  border-color: var(--form-focus);
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.25);
+}
+
+/* Visible focus for keyboard users on all interactive elements */
+.newsletter-form .form-control:focus-visible,
+.newsletter-form button:focus-visible,
+.newsletter-form input[type="checkbox"]:focus-visible {
+  outline: 3px solid var(--form-focus);
+  outline-offset: 2px;
+}
+
+.newsletter-form .form-text {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* Checkbox row */
+.newsletter-form .form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.newsletter-form .form-check input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.2rem;
+  accent-color: var(--intel-blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.newsletter-form .form-check label {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #1e2a36;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* Submit button */
+.newsletter-form .btn-submit {
+  display: inline-block;
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #ffffff;
+  background: var(--intel-blue);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.newsletter-form .btn-submit:hover {
+  background: var(--intel-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(0, 60, 113, 0.3);
+}
+
+.newsletter-form .btn-submit:active {
+  transform: translateY(0);
+}
+
+/* Invalid state (for JS validation) */
+.newsletter-form .form-control[aria-invalid="true"] {
+  border-color: var(--form-error);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+/* ============================================================
+   3. FOOTER
+   ============================================================ */
+
+.site-footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 2rem;
+  margin-top: 4rem;
+  direction: rtl; /* RTL-compatible */
+}
+
+.site-footer .footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-footer .copyright {
+  font-size: 0.9rem;
+  color: var(--footer-muted);
+  margin: 0;
+}
+
+.site-footer nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.site-footer nav a {
+  color: var(--footer-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  border-bottom: 1px solid transparent;
+}
+
+.site-footer nav a:hover,
+.site-footer nav a:focus-visible {
+  color: #ffffff;
+  border-bottom-color: var(--intel-accent);
+}
+
+/* Footer responsive */
+@media screen and (max-width: 600px) {
+  .site-footer .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .site-footer nav ul {
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+/* ============================================================
+   4. RTL OVERRIDES
+   Applied when the page or a section uses dir="rtl"
+   ============================================================ */
+
+[dir="rtl"] .mission-list li i,
+[dir="rtl"] .grid-card h2,
+[dir="rtl"] .newsletter-form label,
+[dir="rtl"] .newsletter-form .form-text,
+[dir="rtl"] .quick-links a {
+  text-align: right;
+}
+
+/* In RTL, the checkbox should appear on the right */
+[dir="rtl"] .newsletter-form .form-check {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .newsletter-form .form-check label {
+  text-align: right;
+}
+
+/* ============================================================
+   5. ACCESSIBILITY HELPERS
+   ============================================================ */
+
+/* Screen-reader-only utility (for extra labels / skip links) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- HIGH CONTRAST / FORCED COLORS ---------- */
+@media (forced-colors: active) {
+  .grid-card,
+  .newsletter-form .form-control,
+  .newsletter-form .btn-submit {
+    border: 1px solid CanvasText;
+  }
+
+  .newsletter-form .btn-submit {
+    color: ButtonText;
+    background: ButtonFace;
+  }
+}
